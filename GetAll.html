@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="Style.css" rel="stylesheet" />
+    <title>Get All</title>
+</head>
+<body>
+    <table><tbody><tr><td><a href="index.html"><b>Home</b></a></td><td><a href="Add.html"><b>Insert Data</b></a></td><td><a href="getdata.html"><b>Retrieve Data</b></a></td><td><a href="GetAll.html"><b>See all Data</b></a></td></tr></tbody></table>
+    <h2>Get All Data from Parse Database</h2>
+    <br />
+    <input id="submit" type="button" value="Get All" onclick="test()"/>
+    <br />
+    <br />
+    <div id="iop"></div>
+    <br /><br /><b><code>/==> Developed by Muhammad Asim Abbas (Xcieo) <==\</code></b>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.0.min.js"></script>
+    <script>
+        var already_operated = false;
+        function test() {
+            if (!already_operated) {
+                already_operated = true;
+                $.ajax({
+                    type: "POST", url: "getall.php", success: function (result) {
+                        doit(result);
+                    }, error: function (xhr) { alert(xhr.status); }
+                });
+            }
+        }
+
+        function check(s) {
+            if (s == "" | s == null)
+                return 0
+            else
+                return 1
+        }
+        
+        var data = "<table>";
+        function DAssembler(text, title) {
+            var html1 = "<tr><td><b>" + title + "</b></td>";
+            var html2 = "<td>" + text + "</td></tr>";
+            var final_output = html1 + html2;
+            if (check(text))
+                data += final_output;
+        }
+        var titles = new Array(
+                    "Name",
+                    "Father Name",
+                    "Group",
+                    "Date Of Birth",
+                    "School ID",
+                    "Class"
+                );
+        function doit(result) {
+            var i,x;
+            var array1 = $.parseJSON(result);
+            for (var len = array1.length, i = 0; i < len; i++) {
+                
+                x = array1[i];
+                var params = new Array(
+                    x.Name,
+                    x.FatherName,
+                    x.Group,
+                    x.DOB,
+                    x.SchoolID,
+                    x.Class
+                );
+                data += "<table>";
+                $.each(params, function (index, value) {
+                    DAssembler(value, titles[index]);
+                });
+                data += "</table> <br />"
+
+                $("#iop").append(data);
+                data = "<table>";
+            }
+            
+
+            
+            
+
+
+        }
+
+    </script>
+</body>
+</html>
